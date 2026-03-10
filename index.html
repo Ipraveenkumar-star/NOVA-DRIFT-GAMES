@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NOVA DRIFT — Gravitational Warfare</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- LOADING SCREEN -->
+  <div id="loading-screen">
+    <div class="loader-content">
+      <div class="loader-logo">
+        <span class="logo-nova">NOVA</span>
+        <span class="logo-drift">DRIFT</span>
+      </div>
+      <div class="loader-bar-wrap">
+        <div class="loader-bar" id="loader-bar"></div>
+      </div>
+      <div class="loader-text" id="loader-text">INITIALIZING SYSTEMS...</div>
+      <div class="loader-particles" id="loader-particles"></div>
+    </div>
+  </div>
+
+  <!-- MAIN MENU -->
+  <div id="main-menu" class="screen hidden">
+    <div class="menu-bg-canvas-wrap">
+      <canvas id="menu-bg-canvas"></canvas>
+    </div>
+    <div class="menu-content">
+      <div class="menu-title-wrap">
+        <div class="menu-subtitle">GRAVITATIONAL WARFARE</div>
+        <div class="menu-title">
+          <span>N</span><span>O</span><span>V</span><span>A</span>
+          <span class="gap"></span>
+          <span>D</span><span>R</span><span>I</span><span>F</span><span>T</span>
+        </div>
+        <div class="menu-tagline">SURVIVE THE VOID. MASTER THE DRIFT.</div>
+      </div>
+      <div class="menu-buttons">
+        <button class="btn-menu btn-primary" id="btn-play">
+          <span class="btn-icon">▶</span> LAUNCH MISSION
+        </button>
+        <button class="btn-menu" id="btn-leaderboard">
+          <span class="btn-icon">◈</span> LEADERBOARD
+        </button>
+        <button class="btn-menu" id="btn-achievements">
+          <span class="btn-icon">✦</span> ACHIEVEMENTS
+        </button>
+        <button class="btn-menu" id="btn-settings">
+          <span class="btn-icon">⚙</span> SETTINGS
+        </button>
+      </div>
+      <div class="menu-stats-bar">
+        <div class="stat-item"><span class="stat-label">BEST SCORE</span><span class="stat-val" id="menu-best-score">0</span></div>
+        <div class="stat-item"><span class="stat-label">MISSIONS</span><span class="stat-val" id="menu-missions">0</span></div>
+        <div class="stat-item"><span class="stat-label">TOP LEVEL</span><span class="stat-val" id="menu-top-level">1</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME SCREEN -->
+  <div id="game-screen" class="screen hidden">
+    <div class="hud">
+      <div class="hud-left">
+        <div class="hud-score">
+          <div class="hud-label">SCORE</div>
+          <div class="hud-val" id="hud-score">0</div>
+        </div>
+        <div class="hud-level">
+          <div class="hud-label">SECTOR</div>
+          <div class="hud-val" id="hud-level">1</div>
+        </div>
+      </div>
+      <div class="hud-center">
+        <div class="health-bar-wrap">
+          <div class="hud-label">HULL INTEGRITY</div>
+          <div class="health-bar"><div class="health-fill" id="health-fill"></div></div>
+        </div>
+        <div class="shield-bar-wrap">
+          <div class="hud-label">SHIELDS</div>
+          <div class="shield-bar"><div class="shield-fill" id="shield-fill"></div></div>
+        </div>
+      </div>
+      <div class="hud-right">
+        <div class="hud-timer">
+          <div class="hud-label">TIME</div>
+          <div class="hud-val" id="hud-timer">00:00</div>
+        </div>
+        <div class="hud-combo">
+          <div class="hud-label">COMBO</div>
+          <div class="hud-val combo-val" id="hud-combo">x1</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pause button -->
+    <button class="btn-pause" id="btn-pause" title="Pause (P)">⏸</button>
+
+    <!-- Game Canvas -->
+    <canvas id="game-canvas"></canvas>
+
+    <!-- Level transition overlay -->
+    <div class="level-transition hidden" id="level-transition">
+      <div class="lt-content">
+        <div class="lt-label">ENTERING SECTOR</div>
+        <div class="lt-number" id="lt-number">2</div>
+        <div class="lt-subtitle" id="lt-subtitle">ASTEROID FIELD</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAUSE SCREEN -->
+  <div id="pause-screen" class="screen hidden overlay-screen">
+    <div class="overlay-panel">
+      <div class="overlay-title">MISSION PAUSED</div>
+      <div class="pause-stats">
+        <div class="ps-item"><span>SCORE</span><span id="pause-score">0</span></div>
+        <div class="ps-item"><span>SECTOR</span><span id="pause-level">1</span></div>
+        <div class="ps-item"><span>TIME</span><span id="pause-time">00:00</span></div>
+      </div>
+      <div class="overlay-buttons">
+        <button class="btn-overlay btn-primary" id="btn-resume">RESUME</button>
+        <button class="btn-overlay" id="btn-restart-pause">RESTART</button>
+        <button class="btn-overlay" id="btn-menu-pause">MAIN MENU</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME OVER SCREEN -->
+  <div id="gameover-screen" class="screen hidden overlay-screen">
+    <div class="overlay-panel gameover-panel">
+      <div class="go-skull">☠</div>
+      <div class="overlay-title go-title">HULL BREACH</div>
+      <div class="go-subtitle">SHIP DESTROYED</div>
+      <div class="go-stats">
+        <div class="go-item highlight"><span>FINAL SCORE</span><span id="go-score">0</span></div>
+        <div class="go-item"><span>SECTOR REACHED</span><span id="go-level">1</span></div>
+        <div class="go-item"><span>TIME SURVIVED</span><span id="go-time">00:00</span></div>
+        <div class="go-item"><span>ENEMIES KILLED</span><span id="go-kills">0</span></div>
+        <div class="go-item"><span>BEST SCORE</span><span id="go-best">0</span></div>
+        <div class="go-newbest hidden" id="go-newbest">✦ NEW RECORD ✦</div>
+      </div>
+      <div class="overlay-buttons">
+        <button class="btn-overlay btn-primary" id="btn-retry">TRY AGAIN</button>
+        <button class="btn-overlay" id="btn-menu-go">MAIN MENU</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEADERBOARD SCREEN -->
+  <div id="leaderboard-screen" class="screen hidden">
+    <div class="panel-screen">
+      <div class="panel-title">◈ LEADERBOARD</div>
+      <div class="leaderboard-list" id="leaderboard-list"></div>
+      <button class="btn-back" id="btn-back-lb">← BACK</button>
+    </div>
+  </div>
+
+  <!-- ACHIEVEMENTS SCREEN -->
+  <div id="achievements-screen" class="screen hidden">
+    <div class="panel-screen">
+      <div class="panel-title">✦ ACHIEVEMENTS</div>
+      <div class="achievements-grid" id="achievements-grid"></div>
+      <button class="btn-back" id="btn-back-ach">← BACK</button>
+    </div>
+  </div>
+
+  <!-- SETTINGS SCREEN -->
+  <div id="settings-screen" class="screen hidden">
+    <div class="panel-screen">
+      <div class="panel-title">⚙ SETTINGS</div>
+      <div class="settings-list">
+        <div class="setting-row">
+          <label>MUSIC VOLUME</label>
+          <input type="range" id="set-music" min="0" max="100" value="40" />
+          <span id="set-music-val">40%</span>
+        </div>
+        <div class="setting-row">
+          <label>SFX VOLUME</label>
+          <input type="range" id="set-sfx" min="0" max="100" value="70" />
+          <span id="set-sfx-val">70%</span>
+        </div>
+        <div class="setting-row">
+          <label>DIFFICULTY</label>
+          <div class="toggle-group" id="set-difficulty">
+            <button class="tgl active" data-val="easy">EASY</button>
+            <button class="tgl" data-val="normal">NORMAL</button>
+            <button class="tgl" data-val="hard">HARD</button>
+          </div>
+        </div>
+        <div class="setting-row">
+          <label>PARTICLES</label>
+          <div class="toggle-group" id="set-particles">
+            <button class="tgl active" data-val="high">HIGH</button>
+            <button class="tgl" data-val="medium">MEDIUM</button>
+            <button class="tgl" data-val="low">LOW</button>
+          </div>
+        </div>
+        <div class="setting-row">
+          <label>CONTROLS</label>
+          <div class="controls-info">
+            <span>WASD / ARROWS — MOVE</span>
+            <span>SPACE / LMB — SHOOT</span>
+            <span>SHIFT — BOOST</span>
+            <span>P / ESC — PAUSE</span>
+          </div>
+        </div>
+      </div>
+      <button class="btn-back" id="btn-back-set">← BACK</button>
+    </div>
+  </div>
+
+  <!-- ACHIEVEMENT TOAST -->
+  <div class="achievement-toast hidden" id="achievement-toast">
+    <div class="at-icon">✦</div>
+    <div class="at-text">
+      <div class="at-title">ACHIEVEMENT UNLOCKED</div>
+      <div class="at-name" id="at-name">First Blood</div>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
